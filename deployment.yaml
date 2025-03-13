@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-test-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-test-app
+  template:
+    metadata:
+      labels:
+        app: ai-test-app
+    spec:
+      containers:
+        - name: ai-test-app
+          image: bartsteer/ai-test-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-test-service
+spec:
+  selector:
+    app: ai-test-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
